@@ -29,8 +29,18 @@ app.get("/filter", (req, res) => {
 });
 
 //4. POST a new joke
+app.post("/jokes", (req, res) => {
+  const newJoke = {
+    id: jokes.length + 1, //idは1から始まるのでプラス1する
+    jokeText: req.body.text,
+    jokeType: req.body.type,
+  };
+  jokes.push(newJoke);
+  console.log(jokes.slice(-1)); // 最後の値を取得する（最後が取れていれば大丈夫だという確認）
+  res.json(newJoke);
+});
 
-//5. PUT a joke
+//5. PUT a joke（完全な更新）
 
 //6. PATCH a joke
 
