@@ -77,7 +77,7 @@ app.delete("/jokes/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const searchIndex = jokes.findIndex((joke) => joke.id === id);
   if (searchIndex > -1) {
-    // 配列は0から始まるから
+    // 見つからない場合を正確に判断するため
     jokes.splice(searchIndex, 1);
     res.sendStatus(200);
   } else {
@@ -90,8 +90,15 @@ app.delete("/jokes/:id", (req, res) => {
 
 //8. DELETE All jokes
 app.delete("/jokes/all", (req, res) => {
-  jokes.length = 0;
-  res.sendStatus(200);
+  const userKey = req.body.key;
+  if (userKey === masterKey) {
+    jokes = [];
+    res.sendStatus(200);
+  } else {
+    res
+      .status(404)
+      .json({ error: "You are not authorized to perform this action." });
+  }
 });
 
 app.listen(port, () => {
