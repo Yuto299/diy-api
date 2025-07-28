@@ -41,8 +41,34 @@ app.post("/jokes", (req, res) => {
 });
 
 //5. PUT a joke（完全な更新）
+app.put("/jokes/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const replacementJoke = {
+    id: id,
+    jokeText: req.body.text,
+    jokeType: req.body.type,
+  };
 
-//6. PATCH a joke
+  const searchIndex = jokes.findIndex((joke) => joke.id === id);
+
+  jokes[searchIndex] = replacementJoke;
+  res.json(replacementJoke);
+});
+
+//6. PATCH a joke（一部更新も可能）
+app.patch("/jokes/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const existingJoke = jokes.find((joke) => joke.id === id);
+  const replacementJoke = {
+    id: id,
+    jokeText: req.body.text || existingJoke.jokeText,
+    jokeType: req.body.type || existingJoke.jokeType,
+  };
+  const searchIndex = jokes.findIndex((joke) => joke.id === id);
+  jokes[searchIndex] = replacementJoke;
+  console.log(jokes[searchIndex]);
+  res.json(replacementJoke);
+});
 
 //7. DELETE Specific joke
 
