@@ -59,18 +59,34 @@ app.put("/jokes/:id", (req, res) => {
 app.patch("/jokes/:id", (req, res) => {
   const id = parseInt(req.params.id);
   const existingJoke = jokes.find((joke) => joke.id === id);
+  // 書き換えもとを探してくる処理
   const replacementJoke = {
     id: id,
-    jokeText: req.body.text || existingJoke.jokeText,
-    jokeType: req.body.type || existingJoke.jokeType,
+    jokeText: req.joke.jokeText || existingJoke.jokeText,
+    jokeType: req.joke.jokeType || existingJoke.jokeType,
   };
-  const searchIndex = jokes.findIndex((joke) => joke.id === id);
+  // 置き換える処理
+  const searchIndex = jokes.find((joke) => joke.id === id);
   jokes[searchIndex] = replacementJoke;
   console.log(jokes[searchIndex]);
   res.json(replacementJoke);
 });
 
 //7. DELETE Specific joke
+app.delete("/jokes/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const searchIndex = jokes.findIndex((joke) => joke.id === id);
+  if (searchIndex > -1) {
+    // 配列は0から始まるから
+    jokes.splice(searchIndex, 1);
+    res.sendStatus(200);
+  } else {
+    res.status(404).json({
+      error: `Joke with id: ${id} not
+      found. No jokes were deleted. `,
+    });
+  }
+});
 
 //8. DELETE All jokes
 
